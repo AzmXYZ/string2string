@@ -118,7 +118,8 @@ class JaroSimilarity:
         len2 = len(str2)
 
         # Get the maximum distance, which we denote by k
-        k = max(len1, len2) // 2 - 1
+        # Ensure k is at least 0 to handle single character strings
+        k = max(0, max(len1, len2) // 2 - 1)
 
         # Initialize the number of matching characters and the number of transpositions
         num_matches = 0

@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name="string2string",
-    version="0.0.151",
+    version="0.0.152",
     description="String-to-String Algorithms for Natural Language Processing",
     long_description=readme,
     long_description_content_type='text/markdown',
