@@ -8,9 +8,26 @@ import torch
 import os
 from torch import Tensor
 from torch.nn import functional as F
-import fasttext
-import fasttext.util
 from string2string.misc.default_tokenizer import Tokenizer
+
+# Lazy import for fasttext (optional dependency)
+fasttext = None
+fasttext_util = None
+
+def _ensure_fasttext():
+    """Lazily import fasttext when needed."""
+    global fasttext, fasttext_util
+    if fasttext is None:
+        try:
+            import fasttext as ft
+            import fasttext.util as ft_util
+            fasttext = ft
+            fasttext_util = ft_util
+        except ImportError:
+            raise ImportError(
+                "fasttext is required for FastTextEmbeddings. "
+                "Install it with: pip install fasttext-wheel (recommended) or pip install fasttext"
+            )
 
 
 class NeuralEmbeddings:
@@ -273,7 +290,7 @@ class GloVeEmbeddings(NeuralEmbeddings):
 # FastTextEmbeddings class
 class FastTextEmbeddings(NeuralEmbeddings):
     """
-    This class implements the FastText embeddings.        
+    This class implements the FastText embeddings.
     """
     def __init__(self,
         model: str = 'cc.en.300.bin',
@@ -290,7 +307,7 @@ class FastTextEmbeddings(NeuralEmbeddings):
                 - 'cc.hi.300.bin': The Hindi model trained on Common Crawl (300 dimensions)
                 - 'cc.fr.300.bin': The French model trained on Common Crawl (300 dimensions)
                 - 'cc.yi.300.bin': The Yiddish model trained on Common Crawl (300 dimensions)
-                -  ... 
+                -  ...
                 - 'wiki.en': The English model trained on Wikipedia (300 dimensions)
                 - 'wiki.simple': The Simple English model trained on Wikipedia (300 dimensions)
                 - 'wiki.ar': The Arabic model trained on Wikipedia (300 dimensions)
@@ -309,22 +326,23 @@ class FastTextEmbeddings(NeuralEmbeddings):
                 - 'wiki.vi': The Vietnamese model trained on Wikipedia (300 dimensions)
                 - 'wiki.id': The Indonesian model trained on Wikipedia (300 dimensions)
                 - 'wiki.ja': The Japanese model trained on Wikipedia (300 dimensions)
-                - ... 
-            
+                - ...
+
             force_download (bool): Whether to force the download of the model. Default: False.
-            dir (str): The directory to save and load the model. 
+            dir (str): The directory to save and load the model.
 
         Returns:
             None
 
         Raises:
             ValueError: If the given model is not available.
+            ImportError: If fasttext is not installed.
 
         .. attention::
 
             If you make use of this code, please cite the following papers (depending on the model you use):
-    
-            .. code-block:: latex 
+
+            .. code-block:: latex
 
                 @inproceedings{mikolov2018advances,
                     title={Advances in Pre-Training Distributed Word Representations},
@@ -333,7 +351,7 @@ class FastTextEmbeddings(NeuralEmbeddings):
                     year={2018}
                 }
 
-            .. code-block:: latex 
+            .. code-block:: latex
 
                 @article{bojanowski2017enriching,
                     title={Enriching Word Vectors with Subword Information},
@@ -345,7 +363,7 @@ class FastTextEmbeddings(NeuralEmbeddings):
                     pages={135--146}
                 }
 
-            .. code-block:: latex 
+            .. code-block:: latex
 
                 @article{joulin2016fasttext,
                     title={FastText.zip: Compressing text classification models},
@@ -358,8 +376,10 @@ class FastTextEmbeddings(NeuralEmbeddings):
 
             * The models are downloaded from https://fasttext.cc/docs/en/english-vectors.html.
             * The models are saved in the torch hub directory, if no directory is specified.
-            * 
-        """ 
+            *
+        """
+        # Ensure fasttext is available
+        _ensure_fasttext()
 
         # Set the attributes
         self.model = model

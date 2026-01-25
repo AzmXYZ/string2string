@@ -329,35 +329,35 @@ class AlignmentTestCase(TestCase):
         alignment  = dtw.get_alignment_path(
             sequence1=[1, 2, 3], 
             sequence2=[1, 2, 3, 4],
-            distance='absolute_difference',
+            distance_metric='absolute_difference',
         )
         self.assertCountEqual(alignment, [(0, 0), (1, 1), (2, 2), (2, 3)])
         # Example 2
         alignment  = dtw.get_alignment_path(
             sequence1=[1, 2, 3],
             sequence2=[1, 2, 3],
-            distance='absolute_difference',
+            distance_metric='absolute_difference',
         )
         self.assertCountEqual(alignment, [(0, 0), (1, 1), (2, 2)])
         # Example 3
         alignment  = dtw.get_alignment_path(
             sequence1="abc",
             sequence2="abcd",
-            distance='absolute_difference',
+            distance_metric='absolute_difference',
         )
         self.assertCountEqual(alignment, [(0, 0), (1, 1), (2, 2), (2, 3)])
         # Example 4
         alignment  = dtw.get_alignment_path(
             sequence1=["a", "b", "c"],
             sequence2=["a", "b", "c", "d"],
-            distance='absolute_difference',
+            distance_metric='absolute_difference',
         )
         self.assertCountEqual(alignment, [(0, 0), (1, 1), (2, 2), (2, 3)])
         # Example 5
         alignment  = dtw.get_alignment_path(
             sequence1=[10, 20, 30],
             sequence2=[20, 50, 60, 30],
-            distance='absolute_difference',
+            distance_metric='absolute_difference',
         )
         self.assertCountEqual(alignment, [(0, 0), (1, 0), (2, 1), (2, 2), (2, 3)])
 

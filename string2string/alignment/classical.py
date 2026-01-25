@@ -894,20 +894,20 @@ class DTW:
         """
         pass
     
-    # Get the alignment indices of two sequences (or list of sequences) by using the DTW algorithm. 
+    # Get the alignment indices of two sequences (or list of sequences) by using the DTW algorithm.
     def get_alignment_path(self,
         sequence1: Union[str, List[str], int, List[int], float, List[float], np.ndarray],
         sequence2: Union[str, List[str], int, List[int], float, List[float], np.ndarray],
-        distance = 'absolute_difference',
+        distance_metric: str = 'absolute_difference',
         p_value: Optional[int] = None,
     ) -> List[Tuple[int, int]]:
-        """
+        r"""
         This function gets the alignment indices of two sequences (or list of sequences) by using the DTW algorithm.
 
         Arguments:
             sequence1: The first sequence.
             sequence2: The second sequence.
-            distance (str): The distance function to be used (currently only 'absolute_difference' and 'square_difference' are supported).
+            distance_metric (str): The distance function to be used (currently only 'absolute_difference' and 'square_difference' are supported).
 
         Returns:
             The path of the alignment as a list of tuples of two integers.
@@ -921,17 +921,17 @@ class DTW:
             * The DTW algorithm is a dynamic programming algorithm that finds the optimal alignment between two sequences (or list of sequences).
             * The time complexity of the DTW algorithm is :math:`O(nm)`, where :math:`n` and :math:`m` are the lengths of the two sequences, respectively.
         """
-    
+
         # First check if both sequences are of the same type.
         if type(sequence1) != type(sequence2):
             raise TypeError("Both sequences must be of the same type.")
 
         # Check if the distance function is supported.
-        if distance not in ['absolute_difference', 'square_difference']:
+        if distance_metric not in ['absolute_difference', 'square_difference']:
             raise ValueError("The distance function must be either 'absolute_difference' or 'square_difference'.")
 
         # If the sequences are strings or lists of strings, convert them to lists of integers (ASCII codes), in np.ndarray format.
-        if type(sequence1) == str or (type(sequence1) == list and type(sequence1[0]) == str):
+        if type(sequence1) == str or (type(sequence1) == list and len(sequence1) > 0 and type(sequence1[0]) == str):
             sequence1 = np.array([ord(char) for char in sequence1])
             sequence2 = np.array([ord(char) for char in sequence2])
 
@@ -949,15 +949,15 @@ class DTW:
         for i in range(1, len1 + 1):
             for j in range(1, len2 + 1):
                 # Get the distance between the two elements.
-                if distance == 'absolute_difference':
-                    distance = abs(sequence1[i - 1] - sequence2[j - 1])
+                if distance_metric == 'absolute_difference':
+                    cell_distance = abs(sequence1[i - 1] - sequence2[j - 1])
                 else:
-                    # distance == 'square_difference'
-                    distance = (sequence1[i - 1] - sequence2[j - 1]) ** 2
+                    # distance_metric == 'square_difference'
+                    cell_distance = (sequence1[i - 1] - sequence2[j - 1]) ** 2
 
                 # Fill the DTW distance matrix.
-                distance_matrix[i, j] = distance + min(
-                        distance_matrix[i - 1, j], 
+                distance_matrix[i, j] = cell_distance + min(
+                        distance_matrix[i - 1, j],
                         distance_matrix[i, j - 1],
                         distance_matrix[i - 1, j - 1]
                     )
@@ -1037,7 +1037,7 @@ class LongestCommonSubsequence(StringAlignment):
         str2: Union[str, List[str]],
         returnCandidates: bool = False,
     ) -> Tuple[float, Union[List[str], List[List[str]]]]:
-        """
+        r"""
         This function computes the longest common subsequence between two strings (or lists of strings).
 
         Arguments:

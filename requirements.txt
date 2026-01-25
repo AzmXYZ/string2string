@@ -2,6 +2,11 @@ torch
 numpy
 transformers
 datasets
-fasttext
+fasttext-wheel
 bert_score
 networkx
+faiss-cpu
+pandas
+joblib
+sacrebleu
+rouge-score

@@ -377,10 +377,10 @@ class DamerauLevenshteinDistance(LevenshteinEditDistance):
 
     # Compute the Damerau-Levenshtein edit distance between two strings
     def compute(self,
-        str1: Union[str, List[str]], 
+        str1: Union[str, List[str]],
         str2: Union[str, List[str]],
     ) -> float:
-        """
+        r"""
         This function computes the Damerau-Levenshtein edit distance between two strings (or lists of strings).
 
         Arguments:

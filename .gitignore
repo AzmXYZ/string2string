@@ -132,3 +132,6 @@ dmypy.json
 # Added by MS
 string2string/compression/
 *DS_Store
+
+# Local conda environments
+.conda/
